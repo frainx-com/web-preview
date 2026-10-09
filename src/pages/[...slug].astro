@@ -1,0 +1,249 @@
+
+---
+import { getCollection, render } from 'astro:content';
+import PageLayout from '~/layouts/PageLayout.astro';
+import { Icon } from 'astro-icon/components';
+export async function getStaticPaths() {
+  const pages = await getCollection('pages', ({ data }) => !data.draft);
+
+  return pages.map((page) => ({
+    params: {
+      slug: page.data.urlPath ?? page.id.replace(/\/index$/, ''),
+    },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+
+const title = page.data.title;
+const isNosotros = title.toLowerCase() === 'nosotros';
+const description = page.data.description ?? '';
+const pageType = page.data.pageType ?? 'institutional';
+
+const isService = pageType === 'service';
+const isLearning = pageType === 'learning';
+
+const eyebrow = isService
+  ? 'SOLUCIONES FRAINX'
+  : isLearning
+    ? 'CENTRO DE APRENDIZAJE'
+    : 'CONOCE FRAINX';
+
+const intro = isService
+  ? 'Infraestructura tecnológica diseñada para responder a necesidades reales.'
+  : isLearning
+    ? 'Conocimiento práctico para construir, administrar y evolucionar infraestructura moderna.'
+    : 'El punto de conexión de la infraestructura moderna.';
+---
+
+<PageLayout metadata={{ title, description }}>
+  <main>
+    <!-- Hero adaptable al tipo de página -->
+    <section class:list={[
+      'relative overflow-hidden border-b border-[#E2E8F0]',
+      isService ? 'bg-[#111827]' : 'bg-[#EFF6FF]',
+    ]}>
+      <div class="mx-auto grid max-w-7xl items-center gap-10 px-6 py-16 md:grid-cols-[1.3fr_0.7fr] md:px-10 md:py-24 lg:px-12">
+        <div>
+          <p class:list={[
+            'mb-5 text-sm font-bold uppercase tracking-[0.18em]',
+            isService ? 'text-blue-400' : 'text-[#2563EB]',
+          ]}>
+            {eyebrow}
+          </p>
+
+          <h1 class:list={[
+            'max-w-3xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl',
+            isService ? 'text-white' : 'text-[#111827]',
+          ]}>
+            {title}<span class="text-[#2563EB]">.</span>
+          </h1>
+
+          {description && (
+            <p class:list={[
+              'mt-6 max-w-2xl text-lg leading-8 md:text-xl',
+              isService ? 'text-slate-300' : 'text-[#475569]',
+            ]}>
+              {description}
+            </p>
+          )}
+
+          <p class:list={[
+            'mt-5 max-w-xl text-sm leading-7',
+            isService ? 'text-slate-400' : 'text-slate-500',
+          ]}>
+            {intro}
+          </p>
+
+          <div class="mt-8 h-1 w-20 bg-[#2563EB]"></div>
+        </div>
+
+        <div class:list={[
+          'relative overflow-hidden rounded-2xl border p-8 md:p-10',
+          isService
+            ? 'border-slate-700 bg-slate-900'
+            : 'border-[#DBEAFE] bg-white',
+        ]}>
+          <p class:list={[
+            'text-xs font-bold uppercase tracking-[0.16em]',
+            isService ? 'text-blue-400' : 'text-[#64748B]',
+          ]}>
+            {isService
+              ? 'Tecnología aplicada'
+              : isLearning
+                ? 'Aprende haciendo'
+                : 'Infraestructura moderna'}
+          </p>
+
+          <p class:list={[
+            'mt-6 text-2xl font-bold leading-snug tracking-tight md:text-3xl',
+            isService ? 'text-white' : 'text-[#111827]',
+          ]}>
+            {isService
+              ? 'Soluciones para una infraestructura más confiable.'
+              : isLearning
+                ? 'Comprende la tecnología. Construye experiencia.'
+                : 'Conectamos tecnología, conocimiento y soluciones.'}
+          </p>
+
+          <div class="mt-8 flex items-center gap-2">
+            <span class="h-1.5 w-10 bg-[#2563EB]"></span>
+            <span class="h-1.5 w-5 bg-blue-200"></span>
+            <span class="h-1.5 w-2 bg-blue-100"></span>
+          </div>
+
+          <div class="mt-8 grid grid-cols-3 gap-2">
+            {(isLearning
+              ? ['Linux', 'Docker', 'DevOps']
+              : isService
+                ? ['Cloud', 'DevOps', 'Security']
+                : ['Linux', 'Docker', 'IA']
+            ).map((item) => (
+              <div class:list={[
+                'border px-2 py-3 text-center text-xs font-semibold sm:text-sm',
+                isService
+                  ? 'border-slate-700 bg-slate-800 text-slate-200'
+                  : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#334155]',
+              ]}>
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contenido escrito en Keystatic -->
+    <section class="bg-white">
+      <div class:list={[
+        'mx-auto px-6 py-14 md:px-10 md:py-20',
+        isLearning ? 'max-w-5xl' : 'max-w-4xl',
+      ]}>
+        <div class="mb-10">
+          <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-[#2563EB]">
+            {isService
+              ? 'Qué ofrecemos'
+              : isLearning
+                ? 'Explora y aprende'
+                : 'FRAINX'}
+          </p>
+          <div class="h-px w-full bg-[#E2E8F0]"></div>
+        </div>
+
+        <article class="prose prose-lg max-w-none
+          prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-[#111827]
+          prose-h2:mb-4 prose-h2:mt-12 prose-h2:text-2xl
+          prose-h3:mt-8 prose-h3:text-xl
+          prose-p:leading-8 prose-p:text-[#475569]
+          prose-a:font-semibold prose-a:text-[#2563EB]
+          prose-strong:text-[#111827]
+          prose-li:leading-8 prose-li:text-[#475569]
+          prose-hr:border-[#E2E8F0]">
+          <Content />
+        </article>
+        
+        {isNosotros && (
+          <div data-nosotros-icon-bank class="hidden" aria-hidden="true">
+            <span data-icon="construir" class="inline-flex text-[#2563EB]">
+              <Icon name="tabler:hammer" class="h-6 w-6 shrink-0" />
+            </span>
+            <span data-icon="conectar" class="inline-flex text-[#2563EB]">
+              <Icon name="tabler:route" class="h-6 w-6 shrink-0" />
+            </span>
+            <span data-icon="filosofia" class="inline-flex text-[#2563EB]">
+              <Icon name="tabler:compass" class="h-6 w-6 shrink-0" />
+            </span>
+            <span data-icon="laboratorio" class="inline-flex text-[#2563EB]">
+              <Icon name="tabler:flask" class="h-6 w-6 shrink-0" />
+            </span>
+            <span data-icon="futuro" class="inline-flex text-[#2563EB]">
+              <Icon name="tabler:telescope" class="h-6 w-6 shrink-0" />
+            </span>
+            <span data-icon="explora" class="inline-flex text-[#2563EB]">
+              <Icon name="tabler:arrow-right" class="h-6 w-6 shrink-0" />
+            </span>
+          </div>
+        )}
+
+        {isService && (
+          <aside class="mt-14 border-l-4 border-[#2563EB] bg-[#F8FAFC] p-6 md:p-8">
+            <h2 class="m-0 text-xl font-bold text-[#111827]">
+              ¿Hablamos de tu proyecto?
+            </h2>
+            <p class="mt-3 leading-7 text-[#475569]">
+              Cuéntanos qué necesitas y exploremos cómo podemos ayudarte.
+            </p>
+            <a
+              href="/contacto"
+              class="mt-5 inline-flex bg-[#2563EB] px-5 py-3 font-semibold text-white no-underline hover:bg-blue-700"
+            >
+              Contactar con FRAINX
+            </a>
+          </aside>
+        )}
+      </div>
+    </section>
+  </main>
+  
+  <script>
+    const iconBank = document.querySelector('[data-nosotros-icon-bank]');
+    const article = document.querySelector('article.prose');
+
+    if (iconBank && article) {
+      const iconMap: Record<string, string> = {
+        'Construimos para aprender': 'construir',
+        'De las piezas al sistema completo': 'conectar',
+        'Nuestra filosofía': 'filosofia',
+        'Un laboratorio permanente': 'laboratorio',
+        'Hacia dónde vamos': 'futuro',
+        'Explora FRAINX': 'explora',
+      };
+
+      article.querySelectorAll('h2').forEach((heading) => {
+        const title = (heading.textContent ?? '').trim().replace(/\s+/g, ' ');
+        const iconName = iconMap[title];
+
+        if (!iconName) return;
+
+        const originalIcon = iconBank.querySelector(
+          `[data-icon="${iconName}"]`
+        );
+
+        if (!originalIcon) return;
+
+        const icon = originalIcon.cloneNode(true) as HTMLElement;
+        icon.removeAttribute('data-icon');
+        icon.setAttribute('aria-hidden', 'true');
+
+        heading.style.display = 'flex';
+        heading.style.alignItems = 'center';
+        heading.style.gap = '0.75rem';
+
+        heading.prepend(icon);
+      });
+    }
+  </script>
+
+</PageLayout>

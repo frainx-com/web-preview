@@ -3,6 +3,37 @@ import { getPermalink, getBlogPermalink } from './utils/permalinks';
 export const headerData = {
   links: [
     {
+      text: 'Nosotros',
+      href: getPermalink('/nosotros'),
+    },
+
+    {
+      text: 'Servicios',
+      links: [
+        {
+          text: 'Infraestructura y Cloud',
+          href: getPermalink('/servicios/cloud-infrastructure'),
+        },
+        {
+          text: 'DevOps y Automatización',
+          href: getPermalink('/servicios/devops-automation'),
+        },
+        {
+          text: 'Seguridad',
+          href: getPermalink('/servicios/security'),
+        },
+        {
+          text: 'Infraestructura de IA',
+          href: getPermalink('/servicios/ai-infrastructure'),
+        },
+        {
+          text: 'Páginas Web',
+          href: getPermalink('/servicios/paginas-web'),
+        },
+      ],
+    },
+
+    {
       text: 'Aprende',
       links: [
         {
@@ -14,7 +45,11 @@ export const headerData = {
           href: getPermalink('/aprende/docker'),
         },
         {
-          text: 'Networking',
+          text: 'Kubernetes',
+          href: getPermalink('/aprende/kubernetes'),
+        },
+        {
+          text: 'Redes',
           href: getPermalink('/aprende/networking'),
         },
         {
@@ -22,7 +57,7 @@ export const headerData = {
           href: getPermalink('/aprende/devops'),
         },
         {
-          text: 'Security',
+          text: 'Seguridad',
           href: getPermalink('/aprende/security'),
         },
         {
@@ -30,7 +65,7 @@ export const headerData = {
           href: getPermalink('/aprende/cloud'),
         },
         {
-          text: 'AI Infrastructure',
+          text: 'Infraestructura de IA',
           href: getPermalink('/aprende/ai-infrastructure'),
         },
         {
@@ -38,91 +73,24 @@ export const headerData = {
           href: getPermalink('/aprende/llmops'),
         },
         {
-          text: 'Observability',
+          text: 'Observabilidad',
           href: getPermalink('/aprende/observability'),
         },
         {
-          text: 'Automation',
+          text: 'Automatización',
           href: getPermalink('/aprende/automation'),
         },
       ],
     },
 
     {
-      text: 'Laboratorios',
-      links: [
-        {
-          text: 'Todos los laboratorios',
-          href: getPermalink('/laboratorios'),
-        },
-        {
-          text: 'Proyectos prácticos',
-          href: getPermalink('/proyectos'),
-        },
-        {
-          text: 'GitHub',
-          href: 'https://github.com/frainx-com',
-          target: '_blank',
-        },
-      ],
+      text: 'Actualidad',
+      href: getBlogPermalink(),
     },
 
     {
-      text: 'Recursos',
-      links: [
-        {
-          text: 'Guías',
-          href: getPermalink('/recursos/guias'),
-        },
-        {
-          text: 'Cheat Sheets',
-          href: getPermalink('/recursos/cheat-sheets'),
-        },
-        {
-          text: 'Scripts',
-          href: getPermalink('/recursos/scripts'),
-        },
-        {
-          text: 'Configuraciones',
-          href: getPermalink('/recursos/configuraciones'),
-        },
-        {
-          text: 'Herramientas',
-          href: getPermalink('/recursos/herramientas'),
-        },
-      ],
-    },
-
-    {
-      text: 'Blog',
-      links: [
-        {
-          text: 'Todos los artículos',
-          href: getBlogPermalink(),
-        },
-      ],
-    },
-
-    {
-      text: 'Servicios',
-      links: [
-        {
-          text: 'Cloud & Infrastructure',
-          href: getPermalink('/servicios/cloud-infrastructure'),
-        },
-        {
-          text: 'DevOps & Automation',
-          href: getPermalink('/servicios/devops-automation'),
-        },
-        {
-          text: 'Security',
-          href: getPermalink('/servicios/security'),
-        },
-        {
-          text: 'AI Infrastructure',
-          href: getPermalink('/servicios/ai-infrastructure'),
-        },
-      ],
+      text: 'Contacto',
+      href: getPermalink('/contacto'),
     },
   ],
 
@@ -133,7 +101,6 @@ export const headerData = {
     },
   ],
 };
-
 export const footerData = {
   links: [
     {

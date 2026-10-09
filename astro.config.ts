@@ -1,9 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-
 import { defineConfig, fontProviders } from 'astro/config';
-
-import { unified } from '@astrojs/markdown-remark';
 
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
@@ -14,9 +11,12 @@ import compress from 'astro-compress';
 import type { AstroIntegration } from 'astro';
 
 import astrowind from './vendor/integration';
-
 import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin } from './src/utils/frontmatter';
 
+import keystatic from '@keystatic/astro';
+import react from '@astrojs/react';
+import markdoc from '@astrojs/markdoc';
+const isDev = process.argv.includes('dev');
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isGitHubPages = process.env.GITHUB_ACTIONS === 'true';
 
@@ -32,18 +32,13 @@ export default defineConfig({
   base: isGitHubPages ? githubPagesBase : '/',
   output: 'static',
 
-  // Prefetch links as they enter the viewport for snappier navigations
-  // (works together with <ClientRouter />, which enables prefetch by default).
+  // Prefetch de enlaces
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'viewport',
   },
 
-  // Native Fonts API: self-hosts Manrope, loads the Latin subset,
-  // preloads the required weights and generates metric-adjusted fallbacks.
-  // Injected via <Font /> in Layout.astro and consumed through the
-  // `--font-manrope` CSS variable in CustomStyles.astro.
-
+  // Fuentes autohospedadas
   fonts: [
     {
       provider: fontProviders.fontsource(),
@@ -56,11 +51,14 @@ export default defineConfig({
     },
   ],
 
+  // Arreglo unificado de integraciones (sin duplicados)
   integrations: [
+    react(),
+   markdoc(),
+  ...(isDev ? [keystatic()] : []),
     sitemap(),
     mdx(),
     icon({
-      // Local SVG icons (used as <Icon name="file-name" />) live next to the other assets.
       iconDir: 'src/assets/icons',
       include: {
         tabler: ['*'],
@@ -77,18 +75,12 @@ export default defineConfig({
         ],
       },
     }),
-
     ...whenExternalScripts(() =>
       partytown({
         config: { forward: ['dataLayer.push'] },
       })
     ),
-
     compress({
-      // csso off on purpose: its parser doesn't understand the media range
-      // syntax Tailwind v4 emits for breakpoints (`@media (width>=48rem)`) and
-      // silently drops every one of those blocks — the site then renders as if
-      // all `md:`/`lg:` classes were missing. lightningcss parses it correctly.
       CSS: { csso: false, lightningcss: { minify: true } },
       HTML: {
         'html-minifier-terser': {
@@ -100,39 +92,21 @@ export default defineConfig({
       SVG: false,
       Logger: 1,
     }),
-
     astrowind({
       config: isGitHubPages ? './src/config.preview.yaml' : './src/config.yaml',
     }),
   ],
 
   image: {
-    // Astro's default Sharp service handles local images.
-    //
-    // Most remote CDN images (Unsplash, Cloudinary, Imgix…) are routed by
-    // src/components/common/Image.astro through `unpic`, which rewrites the
-    // URL with CDN-side query parameters and serves it straight from the
-    // provider — Astro never downloads it, so they don't need to be listed.
-    //
-    // `domains` only matters for remote URLs that fall through to Astro's
-    // native <Image /> (i.e. providers Unpic can't detect, like Pixabay).
-    // Listed entries are authorized to be processed by Sharp.
-    // Unsplash is listed so post covers can be rendered as real 1200×626 Open Graph images.
     domains: ['cdn.pixabay.com', 'images.unsplash.com'],
-
-    // Emit responsive styles for the native <Image layout=…> used by
-    // src/components/common/Image.astro (local images). Utility classes on
-    // each usage still win, since these styles use low-specificity selectors.
     responsiveStyles: true,
   },
 
+  // Configuración de Markdown estandarizada para Astro
   markdown: {
-    processor: unified({
-      remarkPlugins: [readingTimeRemarkPlugin],
-      rehypePlugins: [responsiveTablesRehypePlugin],
-    }),
+    remarkPlugins: [readingTimeRemarkPlugin],
+    rehypePlugins: [responsiveTablesRehypePlugin],
     shikiConfig: {
-      // Code blocks follow the site theme; see the `.astro-code` rules in tailwind.css.
       themes: { light: 'github-light', dark: 'github-dark' },
     },
   },
