@@ -20,8 +20,8 @@ const isDev = process.argv.includes('dev');
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isGitHubPages = process.env.GITHUB_ACTIONS === 'true';
 
-const githubPagesSite = 'https://eleisa.github.io';
-const githubPagesBase = '/frainx-preview';
+const githubPagesSite = 'https://frainx-com.github.io';
+const githubPagesBase = '/web-preview';
 
 const hasExternalScripts = false;
 const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroIntegration)[] = []) =>
