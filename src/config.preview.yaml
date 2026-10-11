@@ -1,7 +1,7 @@
 site:
   name: FRAINX
-  site: 'https://eleisa.github.io'
-  base: '/frainx-preview'
+  site: 'https://frainx-com.github.io'
+  base: '/web-preview'
   trailingSlash: false
 
   googleSiteVerificationId: null
